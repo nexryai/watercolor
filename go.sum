@@ -1,0 +1,6 @@
+github.com/lucasb-eyer/go-colorful v1.2.0 h1:1nnpGOrhyZZuNyfu1QjKiUICQ74+3FNCN69Aj6K7nkY=
+github.com/lucasb-eyer/go-colorful v1.2.0/go.mod h1:R4dSotOR9KMtayYi1e77YzuveK+i7ruzyGqttikkLy0=
+github.com/nexryai/apng v0.0.3 h1:C2dcE1L+3FhRyjOnZQveCoiHvIagabesJUpBqZGbw6E=
+github.com/nexryai/apng v0.0.3/go.mod h1:AYSOoTIs+2cJPM6qxPvetUwZpNdQLfM9YN9EPL6puW0=
+github.com/nexryai/apng v0.0.4 h1:vj9S3p6nrW0mFocAhalRpT1o2pFJOvwIXEBTAKFZ2bM=
+github.com/nexryai/apng v0.0.4/go.mod h1:AYSOoTIs+2cJPM6qxPvetUwZpNdQLfM9YN9EPL6puW0=
