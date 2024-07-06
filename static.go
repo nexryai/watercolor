@@ -84,8 +84,6 @@ func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error)
 		}
 	}
 
-	fmt.Println(targetImage.Quality)
-
 	webpBytes, err := rgbaToWebP(rgba, targetImage.Quality)
 	if err != nil {
 		return nil, err
