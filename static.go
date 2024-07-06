@@ -73,7 +73,7 @@ func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error)
 		draw.CatmullRom.Scale(rgba, rgba.Bounds(), decodedImage, decodedImage.Bounds(), draw.Over, nil)
 	}
 
-	// Default quality is 80
+	// Default quality is 75
 	if targetImage.Quality == 0 {
 		targetImage.Quality = 75
 	}
