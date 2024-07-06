@@ -3,6 +3,7 @@ package watercolor
 import (
 	"bytes"
 	"fmt"
+	avif "github.com/nexryai/goavif"
 	"golang.org/x/image/draw"
 	"golang.org/x/image/webp"
 	"image"
@@ -76,20 +77,35 @@ func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error)
 
 		rgba = image.NewRGBA(image.Rect(0, 0, newWidth, newHeight))
 
-		// Qualityが80以上の場合はCatmullRom、それ以外はBiLinear
-		if targetImage.Quality >= 80 {
+		// Qualityが80以上もしくはAVIFの場合はCatmullRom、それ以外はBiLinear
+		if targetImage.Quality >= 80 || targetImage.Format == TargetFormatAVIF {
 			draw.CatmullRom.Scale(rgba, rgba.Bounds(), decodedImage, decodedImage.Bounds(), draw.Over, nil)
 		} else {
 			draw.BiLinear.Scale(rgba, rgba.Bounds(), decodedImage, decodedImage.Bounds(), draw.Over, nil)
 		}
 	}
 
-	webpBytes, err := rgbaToWebP(rgba, targetImage.Quality)
-	if err != nil {
-		return nil, err
-	} else if webpBytes == nil {
-		return nil, ErrorFailedToEncodeWebP
-	}
+	if targetImage.Format == TargetFormatWebP {
+		webpBytes, err := rgbaToWebP(rgba, targetImage.Quality)
+		if err != nil {
+			return nil, err
+		} else if webpBytes == nil {
+			return nil, ErrorFailedToEncodeWebP
+		}
 
-	return webpBytes, nil
+		return webpBytes, nil
+	} else {
+		avifWriter := bytes.NewBuffer(nil)
+		err := avif.Encode(avifWriter, rgba, avif.Options{
+			Quality: targetImage.Quality,
+		})
+
+		if err != nil {
+			return nil, err
+		}
+
+		avifBytes := avifWriter.Bytes()
+
+		return &avifBytes, nil
+	}
 }
