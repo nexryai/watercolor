@@ -17,12 +17,24 @@ func rgbaToWebP(srcRgba *image.RGBA, quality int) (*[]byte, error) {
 		return nil, ErrImageIsNil
 	}
 
+	qualityFloat := float64(quality)
+
 	var cOutput *C.uint8_t
 	outPtr := (**C.uint8_t)(unsafe.Pointer(&cOutput))
 
-	C.WebPEncodeRGBA((*C.uint8_t)(unsafe.Pointer(&srcRgba.Pix[0])), C.int(srcRgba.Bounds().Dx()), C.int(srcRgba.Bounds().Dy()), C.int(srcRgba.Stride), C.float(quality), outPtr)
+	length := C.WebPEncodeRGBA((*C.uint8_t)(unsafe.Pointer(&srcRgba.Pix[0])), C.int(srcRgba.Bounds().Dx()), C.int(srcRgba.Bounds().Dy()), C.int(srcRgba.Stride), C.float(qualityFloat), outPtr)
 
-	webpBytes := C.GoBytes(unsafe.Pointer(cOutput), C.int(len(srcRgba.Pix)))
+	// Convert the C array to a Go byte slice
+	var webpBytes []byte
+
+	/*
+		sliceHeader := (*reflect.SliceHeader)((unsafe.Pointer(&webpBytes)))
+		sliceHeader.Cap = int(length)
+		sliceHeader.Len = int(length)
+		sliceHeader.Data = uintptr(unsafe.Pointer(cOutput))
+	*/
+
+	webpBytes = C.GoBytes(unsafe.Pointer(cOutput), C.int(length))
 
 	// Free the memory allocated by WebP
 	C.WebPFree(unsafe.Pointer(cOutput))

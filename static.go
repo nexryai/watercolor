@@ -69,13 +69,15 @@ func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error)
 		newHeight := int(float64(bounds.Dy()) * resizeScale)
 
 		rgba = image.NewRGBA(image.Rect(0, 0, newWidth, newHeight))
-		draw.ApproxBiLinear.Scale(rgba, rgba.Bounds(), decodedImage, decodedImage.Bounds(), draw.Over, nil)
+		draw.CatmullRom.Scale(rgba, rgba.Bounds(), decodedImage, decodedImage.Bounds(), draw.Over, nil)
 	}
 
 	// Default quality is 80
 	if targetImage.Quality == 0 {
-		targetImage.Quality = 80
+		targetImage.Quality = 30
 	}
+
+	fmt.Println(targetImage.Quality)
 
 	webpBytes, err := rgbaToWebP(rgba, targetImage.Quality)
 	if err != nil {

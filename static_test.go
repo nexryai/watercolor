@@ -11,7 +11,7 @@ func TestProcessStaticImage(t *testing.T) {
 		t.Error(err)
 	}
 
-	webpBytes, err := ProcessStaticImage(&jpegData, &TargetImage{MaxWidth: 720, MaxHeight: 720})
+	webpBytes, err := ProcessStaticImage(&jpegData, &TargetImage{MaxWidth: 1920, MaxHeight: 4000})
 	if err != nil {
 		t.Error(err)
 	}
