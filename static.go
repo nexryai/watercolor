@@ -17,6 +17,7 @@ var (
 	ErrFailedToDecodeJPEG   = fmt.Errorf("failed to decode as jpeg")
 	ErrFailedToDecodePNG    = fmt.Errorf("failed to decode as png")
 	ErrorFailedToDecodeWebP = fmt.Errorf("failed to decode as webp")
+	ErrorFailedToEncodeWebP = fmt.Errorf("failed to encode as webp")
 )
 
 func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error) {
@@ -83,7 +84,7 @@ func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error)
 	if err != nil {
 		return nil, err
 	} else if webpBytes == nil {
-		return nil, fmt.Errorf("failed to encode as webp")
+		return nil, ErrorFailedToEncodeWebP
 	}
 
 	return webpBytes, nil

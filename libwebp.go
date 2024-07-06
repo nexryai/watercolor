@@ -8,8 +8,13 @@ package watercolor
 */
 import "C"
 import (
+	"errors"
 	"image"
 	"unsafe"
+)
+
+var (
+	ErrEncoderReturnedUnknownError = errors.New("error occurred while encoding WebP")
 )
 
 func rgbaToWebP(srcRgba *image.RGBA, quality int) (*[]byte, error) {
@@ -23,6 +28,9 @@ func rgbaToWebP(srcRgba *image.RGBA, quality int) (*[]byte, error) {
 	outPtr := (**C.uint8_t)(unsafe.Pointer(&cOutput))
 
 	length := C.WebPEncodeRGBA((*C.uint8_t)(unsafe.Pointer(&srcRgba.Pix[0])), C.int(srcRgba.Bounds().Dx()), C.int(srcRgba.Bounds().Dy()), C.int(srcRgba.Stride), C.float(qualityFloat), outPtr)
+	if length == 0 {
+		return nil, ErrEncoderReturnedUnknownError
+	}
 
 	// Convert the C array to a Go byte slice
 	var webpBytes []byte
