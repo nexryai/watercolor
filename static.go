@@ -57,6 +57,11 @@ func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error)
 		}
 	}
 
+	// Default quality is 75
+	if targetImage.Quality == 0 {
+		targetImage.Quality = 75
+	}
+
 	bounds := decodedImage.Bounds()
 	resizeScale := getResizedImageScaleKeepRatio(bounds.Dx(), bounds.Dy(), targetImage.MaxWidth, targetImage.MaxHeight)
 
@@ -70,12 +75,13 @@ func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error)
 		newHeight := int(float64(bounds.Dy()) * resizeScale)
 
 		rgba = image.NewRGBA(image.Rect(0, 0, newWidth, newHeight))
-		draw.CatmullRom.Scale(rgba, rgba.Bounds(), decodedImage, decodedImage.Bounds(), draw.Over, nil)
-	}
 
-	// Default quality is 75
-	if targetImage.Quality == 0 {
-		targetImage.Quality = 75
+		// Qualityが80以上の場合はCatmullRom、それ以外はBiLinear
+		if targetImage.Quality >= 80 {
+			draw.CatmullRom.Scale(rgba, rgba.Bounds(), decodedImage, decodedImage.Bounds(), draw.Over, nil)
+		} else {
+			draw.BiLinear.Scale(rgba, rgba.Bounds(), decodedImage, decodedImage.Bounds(), draw.Over, nil)
+		}
 	}
 
 	fmt.Println(targetImage.Quality)
