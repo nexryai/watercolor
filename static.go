@@ -75,7 +75,7 @@ func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error)
 
 	// Default quality is 80
 	if targetImage.Quality == 0 {
-		targetImage.Quality = 30
+		targetImage.Quality = 75
 	}
 
 	fmt.Println(targetImage.Quality)
