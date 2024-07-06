@@ -2,6 +2,20 @@ package watercolor
 
 import "bytes"
 
+type ImageFormat int
+
+const (
+	ImageFormatUnknown ImageFormat = iota
+	ImageFormatJPEG
+	ImageFormatPNG
+	ImageFormatAnimatedPNG
+	ImageFormatWebP
+	ImageFormatAnimatedWebP
+	ImageFormatGIF
+	ImageFormatAVIF
+	ImageFormatAnimatedAVIF
+)
+
 func isJPEG(data *[]byte) bool {
 	return bytes.HasPrefix(*data, []byte("\xff\xd8\xff"))
 
@@ -35,4 +49,34 @@ func isGIF(data *[]byte) bool {
 
 func isAVIF(data *[]byte) bool {
 	return len(*data) > 12 && bytes.Equal((*data)[4:12], []byte("ftypavif"))
+}
+
+func detectImageFormat(data *[]byte) ImageFormat {
+	if isJPEG(data) {
+		return ImageFormatJPEG
+	}
+
+	if isPNG(data) {
+		if isAnimatedPNG(data) {
+			return ImageFormatAnimatedPNG
+		}
+		return ImageFormatPNG
+	}
+
+	if isWebP(data) {
+		if isAnimatedWebP(data) {
+			return ImageFormatAnimatedWebP
+		}
+		return ImageFormatWebP
+	}
+
+	if isGIF(data) {
+		return ImageFormatGIF
+	}
+
+	if isAVIF(data) {
+		return ImageFormatAVIF
+	}
+
+	return ImageFormatUnknown
 }

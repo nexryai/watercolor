@@ -57,3 +57,30 @@ func TestIsAnimatedPNG(t *testing.T) {
 		t.Log("isAnimatedPNG() passed")
 	}
 }
+
+func TestDetectImageFormat(t *testing.T) {
+	jpegData, err := os.ReadFile("testdata/pic.jpg")
+	if err != nil {
+		t.Error(err)
+	}
+
+	pngData, err := os.ReadFile("testdata/pic.png")
+	if err != nil {
+		t.Error(err)
+	}
+
+	apngData, err := os.ReadFile("testdata/apng1.png")
+	if err != nil {
+		t.Error(err)
+	}
+
+	if detectImageFormat(&jpegData) != ImageFormatJPEG {
+		t.Error("detectImageFormat() failed: JPEG not detected")
+	} else if detectImageFormat(&pngData) != ImageFormatPNG {
+		t.Error("detectImageFormat() failed: PNG not detected")
+	} else if detectImageFormat(&apngData) != ImageFormatAnimatedPNG {
+		t.Error("detectImageFormat() failed: Animated PNG not detected")
+	} else {
+		t.Log("detectImageFormat() passed")
+	}
+}
