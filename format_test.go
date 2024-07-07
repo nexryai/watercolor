@@ -58,6 +58,20 @@ func TestIsAnimatedPNG(t *testing.T) {
 	}
 }
 
+func TestIsICO(t *testing.T) {
+	data, err := os.ReadFile("testdata/pic.ico")
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !isICO(&data) {
+		t.Error("isICO() failed")
+	} else {
+		t.Log("isICO() passed")
+	}
+
+}
+
 func TestDetectImageFormat(t *testing.T) {
 	jpegData, err := os.ReadFile("testdata/pic.jpg")
 	if err != nil {

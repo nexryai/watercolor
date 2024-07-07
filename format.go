@@ -14,6 +14,7 @@ const (
 	ImageFormatGIF
 	ImageFormatAVIF
 	ImageFormatAnimatedAVIF
+	ImageFormatICO
 )
 
 func isJPEG(data *[]byte) bool {
@@ -51,6 +52,10 @@ func isAVIF(data *[]byte) bool {
 	return len(*data) > 12 && bytes.Equal((*data)[4:12], []byte("ftypavif"))
 }
 
+func isICO(data *[]byte) bool {
+	return bytes.HasPrefix(*data, []byte("\x00\x00\x01\x00"))
+}
+
 func detectImageFormat(data *[]byte) ImageFormat {
 	if isJPEG(data) {
 		return ImageFormatJPEG
@@ -76,6 +81,10 @@ func detectImageFormat(data *[]byte) ImageFormat {
 
 	if isAVIF(data) {
 		return ImageFormatAVIF
+	}
+
+	if isICO(data) {
+		return ImageFormatICO
 	}
 
 	return ImageFormatUnknown
