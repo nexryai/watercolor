@@ -12,14 +12,15 @@ import (
 )
 
 var (
-	ErrInvalidParam       = fmt.Errorf("invalid parameter")
-	ErrImageIsNil         = fmt.Errorf("image is nil")
-	ErrImageFormatUnknown = fmt.Errorf("image format is unknown")
-	ErrFailedToDecodeJPEG = fmt.Errorf("failed to decode as jpeg")
-	ErrFailedToDecodePNG  = fmt.Errorf("failed to decode as png")
-	ErrFailedToDecodeWebP = fmt.Errorf("failed to decode as webp")
-	ErrFailedToEncodeWebP = fmt.Errorf("failed to encode as webp")
-	ErrFailedToEncodeAVIF = fmt.Errorf("failed to encode as avif")
+	ErrInvalidParam         = fmt.Errorf("invalid parameter")
+	ErrImageIsNil           = fmt.Errorf("image is nil")
+	ErrImageFormatUnknown   = fmt.Errorf("image format is unknown")
+	ErrFailedToDecodeJPEG   = fmt.Errorf("failed to decode as jpeg")
+	ErrFailedToDecodePNG    = fmt.Errorf("failed to decode as png")
+	ErrFailedToDecodeWebP   = fmt.Errorf("failed to decode as webp")
+	ErrorFailedToDecodeAVIF = fmt.Errorf("failed to decode as avif")
+	ErrFailedToEncodeWebP   = fmt.Errorf("failed to encode as webp")
+	ErrFailedToEncodeAVIF   = fmt.Errorf("failed to encode as avif")
 )
 
 func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error) {
@@ -56,6 +57,11 @@ func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error)
 		decodedImage, err = webp.Decode(imageReader)
 		if err != nil {
 			return nil, ErrFailedToDecodeWebP
+		}
+	case ImageFormatAVIF:
+		decodedImage, err = avif.Decode(imageReader)
+		if err != nil {
+			return nil, ErrorFailedToDecodeAVIF
 		}
 	}
 
