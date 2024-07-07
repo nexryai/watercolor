@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	avif "github.com/nexryai/goavif"
+	ico "github.com/ur65/go-ico"
 	"golang.org/x/image/draw"
 	"golang.org/x/image/webp"
 	"image"
@@ -64,6 +65,31 @@ func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error)
 		if err != nil {
 			return nil, ErrorFailedToDecodeAVIF
 		}
+	case ImageFormatICO:
+		decodedImages, err := ico.Decode(imageReader)
+		if err != nil {
+			return nil, err
+		}
+
+		// decodedImagesの中から一番大きい画像を選択
+		var largestImage *image.Image
+		var largestWidth int
+		var largestHeight int
+		for _, di := range decodedImages {
+			bounds := di.Bounds()
+			if bounds.Dx() > largestWidth || bounds.Dy() > largestHeight {
+				largestWidth = bounds.Dx()
+				largestHeight = bounds.Dy()
+				largestImage = &di
+			}
+		}
+
+		if largestImage == nil {
+			return nil, ErrImageFormatNotSupported
+		} else {
+			decodedImage = *largestImage
+		}
+
 	default:
 		return nil, ErrImageFormatNotSupported
 	}

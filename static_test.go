@@ -124,3 +124,27 @@ func TestProcessStaticImageAvifToWebP(t *testing.T) {
 	os.Create("testout/pic.webp")
 	os.WriteFile("testout/pic.webp", *webpBytes, 0644)
 }
+
+func TestProcessStaticImageIcoToWebP(t *testing.T) {
+	icoData, err := os.ReadFile("testdata/pic.ico")
+	if err != nil {
+		t.Error(err)
+	}
+
+	webpBytes, err := ProcessStaticImage(&icoData, &TargetImage{
+		MaxWidth:  1920,
+		MaxHeight: 9999,
+		Quality:   80,
+		Format:    TargetFormatWebP,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !isWebP(webpBytes) {
+		t.Error("output is not webp")
+	}
+
+	os.Create("testout/pic.webp")
+	os.WriteFile("testout/pic.webp", *webpBytes, 0644)
+}
