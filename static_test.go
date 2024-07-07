@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestProcessStaticImageWebP(t *testing.T) {
+func TestProcessStaticImageJpegToWebP(t *testing.T) {
 	jpegData, err := os.ReadFile("testdata/pic.jpg")
 	if err != nil {
 		t.Error(err)
@@ -25,7 +25,7 @@ func TestProcessStaticImageWebP(t *testing.T) {
 	os.WriteFile("testout/pic.webp", *webpBytes, 0644)
 }
 
-func TestProcessStaticImageAVIF(t *testing.T) {
+func TestProcessStaticImageJpegToAVIF(t *testing.T) {
 	jpegData, err := os.ReadFile("testdata/pic.jpg")
 	if err != nil {
 		t.Error(err)
