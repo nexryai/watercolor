@@ -20,7 +20,7 @@ var (
 	ErrFailedToDecodeJPEG      = fmt.Errorf("failed to decode as jpeg")
 	ErrFailedToDecodePNG       = fmt.Errorf("failed to decode as png")
 	ErrFailedToDecodeWebP      = fmt.Errorf("failed to decode as webp")
-	ErrorFailedToDecodeAVIF    = fmt.Errorf("failed to decode as avif")
+	ErrFailedToDecodeAVIF      = fmt.Errorf("failed to decode as avif")
 	ErrFailedToEncodeWebP      = fmt.Errorf("failed to encode as webp")
 	ErrFailedToEncodeAVIF      = fmt.Errorf("failed to encode as avif")
 )
@@ -63,7 +63,7 @@ func ProcessStaticImage(data *[]byte, targetImage *TargetImage) (*[]byte, error)
 	case ImageFormatAVIF:
 		decodedImage, err = avif.Decode(imageReader)
 		if err != nil {
-			return nil, ErrorFailedToDecodeAVIF
+			return nil, ErrFailedToDecodeAVIF
 		}
 	case ImageFormatICO:
 		decodedImages, err := ico.Decode(imageReader)
