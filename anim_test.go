@@ -15,7 +15,7 @@ func TestApngToWebP(t *testing.T) {
 	defer f.Close()
 
 	apngBytes, err := io.ReadAll(f)
-	webp, err := apngToWebP(&apngBytes, 0, 0)
+	webp, err := apngToWebP(&apngBytes, 110, 110)
 	if err != nil {
 		t.Fatal(err)
 	}

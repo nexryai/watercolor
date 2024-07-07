@@ -35,10 +35,7 @@ func blendFrames(prevFrame *image.RGBA, currFrame *image.Image, offsetX int, off
 }
 
 // Goのimage.Imageをlibwebp.WebPPictureに変換
-func imageToWebPPicture(img *image.RGBA, scale float32, width int, height int, xOffset int, yOffset int) C.WebPPicture {
-	bounds := (*img).Bounds()
-	fmt.Printf("Dx: %v Dy: %v\n", bounds.Dx(), bounds.Dy())
-
+func imageToWebPPicture(img *image.RGBA, width int, height int) C.WebPPicture {
 	var pic C.WebPPicture
 	C.WebPPictureInit(&pic)
 
@@ -46,26 +43,8 @@ func imageToWebPPicture(img *image.RGBA, scale float32, width int, height int, x
 	pic.height = C.int(height)
 	pic.use_argb = 1
 
-	// リサイズ後の画像を格納するためのRGBAイメージを作成
-	rgbaImg := image.NewRGBA(image.Rect(0, 0, width, height))
-
-	if scale != 1 {
-		// リサイズ
-		newWidth := int(float32((*img).Bounds().Dx()) * scale)
-		newHeight := int(float32((*img).Bounds().Dy()) * scale)
-
-		//xOffset = int(float32(xOffset) * scale)
-		//yOffset = int(float32(yOffset) * scale)
-
-		fmt.Printf("newWidth: %v newHeight: %v\n", newWidth, newHeight)
-		draw.ApproxBiLinear.Scale(rgbaImg, image.Rect(xOffset, yOffset, newWidth, newHeight), img, bounds, draw.Src, nil)
-	} else {
-		// リサイズしない場合、そのままコピー
-		rgbaImg = img
-	}
-
 	// WebPにエンコード
-	C.WebPPictureImportRGBA(&pic, (*C.uint8_t)(unsafe.Pointer(&rgbaImg.Pix[0])), C.int(rgbaImg.Stride))
+	C.WebPPictureImportRGBA(&pic, (*C.uint8_t)(unsafe.Pointer(&img.Pix[0])), C.int(img.Stride))
 
 	return pic
 }
@@ -96,14 +75,10 @@ func apngToWebP(imgPtr *[]byte, width int, height int) (*[]byte, error) {
 		height = originalHeight
 	}
 
-	fmt.Printf("originalWidth: %d, originalHeight: %d\n", originalWidth, originalHeight)
-
+	// WebPのアニメーションエンコーダーの初期化
 	var animConfig C.WebPAnimEncoderOptions
 	C.WebPAnimEncoderOptionsInit(&animConfig)
 	animEncoder := C.WebPAnimEncoderNew(C.int(width), C.int(height), &animConfig)
-
-	scale := float32(height) / float32(originalHeight)
-	fmt.Printf("scale: %v\n", scale)
 
 	// BLEND_OP_OVERの場合、前のフレームとのブレンドが必要
 	var baseFrame *image.RGBA
@@ -136,14 +111,13 @@ func apngToWebP(imgPtr *[]byte, width int, height int) (*[]byte, error) {
 			// 一つ前のフレームをそのまま使用するため何もしない
 		}
 
-		// webpとしてエンコード
-		pic := imageToWebPPicture(rgba, scale, width, height, f.OffsetX, f.OffsetY)
+		// libwebpのWebPPictureに変換
+		pic := imageToWebPPicture(rgba, originalWidth, originalHeight)
 
 		// リサイズ
 		C.WebPPictureRescale(&pic, C.int(width), C.int(height))
 
 		timeStamp := int(float32(f.Num) * f.Delay * 1000)
-		fmt.Printf("timeStamp: %d\n", timeStamp)
 
 		// Animated WebPのフレームとして追加
 		result := C.int(C.WebPAnimEncoderAdd(animEncoder, &pic, C.int(timeStamp), nil))
