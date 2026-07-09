@@ -6,7 +6,7 @@ require (
 	github.com/nexryai/apng v0.0.4
 	github.com/nexryai/goavif v0.0.0-20240706102244-654f5b55d678
 	github.com/ur65/go-ico v1.0.3
-	golang.org/x/image v0.38.0
+	golang.org/x/image v0.41.0
 )
 
 require (

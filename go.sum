@@ -6,7 +6,7 @@ github.com/nexryai/goavif v0.0.0-20240706102244-654f5b55d678 h1:yNd2JkfIsICDwYxb
 github.com/nexryai/goavif v0.0.0-20240706102244-654f5b55d678/go.mod h1:9Cd2spT3eqs4vBs/UYpSZrTujUyFdaJmvTzJOuV2TgM=
 github.com/ur65/go-ico v1.0.3 h1:NTKAvR8WpsBZ6AgPQwQ2cv1SU2qG+Jjc5mpUDUll6Kw=
 github.com/ur65/go-ico v1.0.3/go.mod h1:etIkLsAcEEKzubhLcDmbDtKXwXCooUceb37boTcaTwo=
-golang.org/x/image v0.38.0 h1:5l+q+Y9JDC7mBOMjo4/aPhMDcxEptsX+Tt3GgRQRPuE=
-golang.org/x/image v0.38.0/go.mod h1:/3f6vaXC+6CEanU4KJxbcUZyEePbyKbaLoDOe4ehFYY=
+golang.org/x/image v0.41.0 h1:8wS72eGJMJaBxK6okTzd4WaXumUlTVlb753MlsSvTCo=
+golang.org/x/image v0.41.0/go.mod h1:uIc348UZMSvS5Z65CVZ7iDPaNobNFEPeJ4kbqTOszmA=
 golang.org/x/sys v0.21.0 h1:rF+pYz3DAGSQAxAu1CbC7catZg4ebC4UIeIhKxBZvws=
 golang.org/x/sys v0.21.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
